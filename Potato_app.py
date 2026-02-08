@@ -25,10 +25,9 @@ if prompt := st.chat_input("Ask your spud..."):
         st.markdown(prompt)
 
     try:
-        # Changed 'gemini-1.5-flash' to 'models/gemini-1.5-flash'
+        # Switching to gemini-pro (the most 'classic' stable version)
         model = genai.GenerativeModel(
-            model_name='models/gemini-1.5-flash',
-            system_instruction="You are Potato AI, a punny potato assistant."
+            model_name='gemini-pro'
         )
         response = model.generate_content(prompt)
         
