@@ -25,7 +25,7 @@ if prompt := st.chat_input("Ask your spud..."):
         st.markdown(prompt)
 
     try:
-        # The 'models/' prefix below is the fix for the 404 error
+        # Changed 'gemini-1.5-flash' to 'models/gemini-1.5-flash'
         model = genai.GenerativeModel(
             model_name='models/gemini-1.5-flash',
             system_instruction="You are Potato AI, a punny potato assistant."
