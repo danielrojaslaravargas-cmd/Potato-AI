@@ -1,14 +1,10 @@
 import streamlit as st
 import google.generativeai as genai
 
-# --- 1. SETTINGS ---
-# Using your specific key directly to ensure no 'Secret' errors
 API_KEY = "AIzaSyAR3wLcR4yLwHXLmJAavohHjaE3O5gVDUg"
 
-# This line is the magic fix: it forces the API to use the version your key wants
 genai.configure(api_key=API_KEY, transport='rest') 
 
-# --- 2. UI STYLING ---
 st.set_page_config(page_title="POTATO AI 🥔", page_icon="🥔")
 st.markdown("""
     <style>
@@ -20,7 +16,6 @@ st.markdown("""
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# --- 3. THE BRAIN ---
 st.title("POTATO AI 🥔")
 
 # Display history
@@ -34,8 +29,6 @@ if prompt := st.chat_input("Ask your spud..."):
         st.markdown(prompt)
 
     try:
-        # We are using 'gemini-pro' here because it is the most 
-        # universally accepted model for that specific API key type
         model = genai.GenerativeModel('gemini-pro')
         
         response = model.generate_content(prompt)
