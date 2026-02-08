@@ -5,7 +5,7 @@ try:
     API_KEY = st.secrets[AIzaSyCRZX0ZEY5ebsMCSxviyLiFQunwN0_HO7c]
     genai.configure(api_key=API_KEY)
 except Exception as e:
-    st.error(AIzaSyCRZX0ZEY5ebsMCSxviyLiFQunwN0_HO7c)
+    st.error(error404)
     st.stop()
 
 st.set_page_config(page_title="POTATO AI 🥔", page_icon="🥔")
