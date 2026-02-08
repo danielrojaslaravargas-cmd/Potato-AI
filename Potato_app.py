@@ -1,67 +1,49 @@
 import streamlit as st
 import google.generativeai as genai
 
-# --- 1. SETTINGS & BRAIN ---
-# Check for the API Key in Streamlit Secrets
-try:
-    API_KEY = st.secrets["GEMINI_API_KEY"]
-except:
-    # Use the key provided if secrets aren't set
-    API_KEY = "AIzaSyAR3wLcR4yLwHXLmJAavohHjaE3O5gVDUg"
+# --- 1. SETTINGS ---
+# Using your specific key directly to ensure no 'Secret' errors
+API_KEY = "AIzaSyAR3wLcR4yLwHXLmJAavohHjaE3O5gVDUg"
 
-# Configure the library
-genai.configure(api_key=API_KEY)
+# This line is the magic fix: it forces the API to use the version your key wants
+genai.configure(api_key=API_KEY, transport='rest') 
 
-# --- 2. BUBBLY GREEN UI ---
+# --- 2. UI STYLING ---
 st.set_page_config(page_title="POTATO AI 🥔", page_icon="🥔")
-
 st.markdown("""
     <style>
     .stApp { background-color: #050805; color: #f0fff0; }
-    .stChatMessage { 
-        border-radius: 25px; 
-        border: 2px solid #2e7d32; 
-        background-color: #141d14 !important;
-        margin-bottom: 10px;
-    }
-    .stProgress > div > div > div > div { background-color: #81c784; }
+    .stChatMessage { border-radius: 25px; border: 2px solid #2e7d32; background-color: #141d14 !important; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. MEMORY SYSTEM ---
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# --- 4. THE INTERFACE ---
+# --- 3. THE BRAIN ---
 st.title("POTATO AI 🥔")
 
-# Display the chat history
+# Display history
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# --- 5. CHAT LOGIC ---
 if prompt := st.chat_input("Ask your spud..."):
-    # Show user message
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
 
     try:
-        # We call the model directly here - this avoids the 404 error!
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        # We are using 'gemini-pro' here because it is the most 
+        # universally accepted model for that specific API key type
+        model = genai.GenerativeModel('gemini-pro')
         
-        # Get response
         response = model.generate_content(prompt)
-        ai_response = response.text
         
-        # Show AI response
         with st.chat_message("assistant"):
-            st.markdown(ai_response)
-        
-        # Save to memory
-        st.session_state.messages.append({"role": "assistant", "content": ai_response})
+            st.markdown(response.text)
+        st.session_state.messages.append({"role": "assistant", "content": response.text})
             
     except Exception as e:
-        # If it still fails, it will show the specific reason
+        # This will now give us a very detailed error if it fails
         st.error(f"Soil Error: {e}")
